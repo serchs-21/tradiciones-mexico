@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#9b2226">
+  <meta name="description" content="Descubre las tradiciones, festividades y cultura de México.">
+  <title>Descubre las Tradiciones de México 🇲🇽</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+
+  <header class="site-header">
+    <a class="brand" href="#inicio" aria-label="Inicio">
+      <span class="brand-icon">🇲🇽</span>
+      <span>Raíces de México</span>
+    </a>
+
+    <button class="menu-toggle" id="menuToggle"
+      aria-label="Abrir menú" aria-expanded="false">☰</button>
+
+    <nav id="mainNav" class="main-nav">
+      <a href="#galeria">Tradiciones</a>
+      <a href="#pasaporte">Pasaporte</a>
+      <a href="#visitantes">Libro de visitas</a>
+    </nav>
+  </header>
+
+  <main>
+    <!-- PRESENTACIÓN Y EQUIPO 2 -->
+    <section class="hero" id="inicio">
+      <div class="hero-content">
+        <span class="eyebrow">CULTURA · HISTORIA · IDENTIDAD</span>
+        <h1>Descubre las <span>Tradiciones</span> de México</h1>
+        <p>
+          Un viaje por los colores, sabores, danzas y celebraciones
+          que hacen de México un país extraordinario.
+        </p>
+        <a href="#galeria" class="btn btn-primary">Explorar tradiciones ↓</a>
+        <p id="welcomeMessage" class="welcome-message" aria-live="polite">
+          ¡Bienvenido a nuestras tradiciones!
+        </p>
+      </div>
+
+      <div class="hero-art" aria-label="Símbolos de la cultura mexicana">
+        <span class="art-flower">✿</span>
+        <span class="art-skull">💀</span>
+        <span class="art-sun">☀️</span>
+        <span class="art-flower second">✿</span>
+        <span class="art-caption">México vive en sus tradiciones</span>
+      </div>
+
+      <div class="stats-grid">
+        <article class="stat-card">
+          <span>👣</span>
+          <strong id="visitCounter">0</strong>
+          <small>Tus visitas</small>
+        </article>
+        <article class="stat-card">
+          <span>❤️</span>
+          <strong id="reactionCounter">0</strong>
+          <small>Reacciones</small>
+        </article>
+        <article class="stat-card">
+          <span>📖</span>
+          <strong id="commentCounter">0</strong>
+          <small>Recuerdos compartidos</small>
+        </article>
+      </div>
+    </section>
+
+    <!-- EQUIPO 1: GALERÍA Y FILTROS -->
+    <section class="section" id="galeria">
+      <div class="section-heading">
+        <span class="eyebrow">EQUIPO 1 · EXPLORA</span>
+        <h2>Un México, mil tradiciones</h2>
+        <p>Selecciona una región o categoría y descubre sus tesoros culturales.</p>
+      </div>
+
+      <div class="region-buttons" aria-label="Filtrar por región">
+        <button class="region-btn active" data-region="Todas">🇲🇽 Todas</button>
+        <button class="region-btn" data-region="Norte">🌵 Norte</button>
+        <button class="region-btn" data-region="Centro">🏛️ Centro</button>
+        <button class="region-btn" data-region="Sur">🌺 Sur</button>
+      </div>
+
+      <div class="filters">
+        <label>
+          Región
+          <select id="regionFilter">
+            <option value="Todas">Todas las regiones</option>
+            <option value="Norte">Norte</option>
+            <option value="Centro">Centro</option>
+            <option value="Sur">Sur</option>
+          </select>
+        </label>
+
+        <label>
+          Tipo de tradición
+          <select id="typeFilter">
+            <option value="Todas">Todos los tipos</option>
+            <option value="Festividades">Festividades</option>
+            <option value="Gastronomía">Gastronomía</option>
+            <option value="Danza">Danza</option>
+            <option value="Artesanía">Artesanía</option>
+            <option value="Música">Música</option>
+          </select>
+        </label>
+
+        <label class="favorites-filter">
+          <input type="checkbox" id="onlyFavorites">
+          ❤️ Solo mis favoritas
+        </label>
+      </div>
+
+      <p class="results-message" id="resultsMessage" aria-live="polite"></p>
+      <div class="traditions-grid" id="traditionsGrid"></div>
+
+      <p class="empty-state" id="emptyState" hidden>
+        No encontramos tradiciones con esos filtros. ¡Prueba otra combinación!
+      </p>
+    </section>
+
+    <!-- EQUIPO 2: PASAPORTE CULTURAL -->
+    <section class="section passport-section" id="pasaporte">
+      <div class="section-heading">
+        <span class="eyebrow">EQUIPO 2 · PARTICIPA</span>
+        <h2>Mi pasaporte cultural</h2>
+        <p>Marca las tradiciones que has vivido en persona y descubre tu avance.</p>
+      </div>
+
+      <div class="passport-card">
+        <div class="passport-top">
+          <span class="passport-stamp">✦ MÉXICO ✦</span>
+          <div>
+            <strong id="passportPercent">0%</strong>
+            <p>de mexicanidad completada</p>
+          </div>
+        </div>
+
+        <div class="progress-track" role="progressbar"
+          aria-label="Avance del pasaporte cultural"
+          aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"
+          id="passportProgress">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+
+        <div class="passport-checklist" id="passportChecklist"></div>
+        <p class="passport-message" id="passportMessage" aria-live="polite">
+          ¡Tu aventura cultural comienza aquí!
+        </p>
+      </div>
+    </section>
+
+    <!-- EQUIPO 3: REGISTRO Y LIBRO DE VISITAS -->
+    <section class="section visitors-section" id="visitantes">
+      <div class="section-heading">
+        <span class="eyebrow">EQUIPO 3 · COMPARTE</span>
+        <h2>Deja tu huella en México</h2>
+        <p>Registra tu visita y comparte un recuerdo relacionado con nuestras tradiciones.</p>
+      </div>
+
+      <div class="visitor-layout">
+        <form id="visitorForm" class="visitor-form" novalidate>
+          <h3>📝 Libro de visitas</h3>
+
+          <label for="visitorName">Nombre</label>
+          <input id="visitorName" name="name" type="text"
+            placeholder="¿Cómo te llamas?" maxlength="60" required>
+          <small class="field-message" id="nameMessage"></small>
+
+          <label for="visitorOrigin">Municipio o localidad de origen</label>
+          <input id="visitorOrigin" name="origin" type="text"
+            placeholder="Ej. Cuichapa, Córdoba, Orizaba..." maxlength="80" required>
+          <small class="field-message" id="originMessage"></small>
+
+          <label for="visitorEmail">Correo electrónico</label>
+          <input id="visitorEmail" name="email" type="email"
+            placeholder="correo@ejemplo.com" maxlength="120" required>
+          <small class="field-message" id="emailMessage"></small>
+
+          <label for="visitorFavorite">Tradición favorita</label>
+          <select id="visitorFavorite" name="favorite" required>
+            <option value="">Selecciona una tradición</option>
+          </select>
+          <small class="field-message" id="favoriteMessage"></small>
+
+          <label for="visitorComment">Tu recuerdo o mensaje</label>
+          <textarea id="visitorComment" name="comment"
+            placeholder="Cuéntanos qué tradición te gusta y por qué..."
+            rows="4" maxlength="500" required></textarea>
+          <small class="field-message" id="commentMessage"></small>
+
+          <button type="submit" class="btn btn-primary full-width">
+            Firmar libro de visitas ✨
+          </button>
+          <p id="formMessage" class="form-message" aria-live="polite"></p>
+        </form>
+
+        <div class="wall-panel">
+          <h3>💌 Muro de recuerdos</h3>
+          <div class="quote-box">
+            <p id="randomQuote">La cultura es la memoria de un pueblo.</p>
+            <button id="quoteButton" class="btn btn-outline" type="button">
+              Otra frase ✨
+            </button>
+          </div>
+          <div id="commentsWall" class="comments-wall" aria-live="polite"></div>
+          <p id="wallEmpty" class="empty-state">
+            Aún no hay recuerdos. ¡Sé la primera persona en firmar!
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer" style="text-align: center;">
+    <p>© 2026 Raíces de México. Todos los derechos reservados.</p>
+    <p>Proyecto desarrollado con ❤️ por los alumnos del <strong>Instituto Tecnológico Superior de Zongolica — U.A. Cuichapa</strong> 🇲🇽</p>
+    <a href="#inicio">Volver al inicio ↑</a>
+  </footer>
+
+  <!-- El contenido del modal se genera desde JavaScript -->
+  <div id="modalRoot"></div>
+
+</body>
+</html>
