@@ -272,7 +272,7 @@ function renderizarGaleria() {
     visual.style.height = "180px";
     visual.style.overflow = "hidden";
 
-    // Imagen real sustituyendo los íconos
+    // Imagen real
     const img = document.createElement("img");
     img.src = tradicion.imagen;
     img.alt = tradicion.nombre;
