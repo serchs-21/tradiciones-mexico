@@ -741,7 +741,7 @@ body.modal-open {
 
 .quote-box {
   background: var(--green);
-  color: white;
+  color: black;
   padding: 25px;
   border-radius: 18px;
   text-align: center;
@@ -756,7 +756,7 @@ body.modal-open {
 
 .quote-box button {
   border-color: rgba(255, 255, 255, 0.4);
-  color: white;
+  color: black;
 }
 
 .quote-box button:hover {
