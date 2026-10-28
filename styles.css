@@ -1,4 +1,3 @@
-
 /* =========================================
    DESCUBRE LAS TRADICIONES DE MÉXICO
    Diseño adaptable a celulares y escritorio
@@ -18,7 +17,7 @@
   --shadow: 0 12px 35px rgba(65, 30, 20, .09);
 }
 
-* {
+*, *::before, *::after {
   box-sizing: border-box;
 }
 
@@ -59,6 +58,7 @@ textarea:focus-visible {
   outline-offset: 3px;
 }
 
+/* Header & Navegación */
 .site-header {
   position: sticky;
   top: 0;
@@ -110,6 +110,7 @@ textarea:focus-visible {
   font-size: 1.6rem;
 }
 
+/* Sección Hero / Presentación */
 .hero {
   position: relative;
   overflow: hidden;
@@ -117,7 +118,7 @@ textarea:focus-visible {
   grid-template-columns: 1.15fr .85fr;
   align-items: center;
   gap: 35px;
-  padding: 72px 8% 45px;
+  padding: 60px 8% 45px;
   background:
     radial-gradient(circle at 85% 20%, #f7d6df 0, transparent 30%),
     radial-gradient(circle at 10% 90%, #dce8d4 0, transparent 28%),
@@ -191,61 +192,40 @@ textarea:focus-visible {
   font-size: .95rem !important;
 }
 
+/* Imagen Principal y Leyenda (Hero Art) */
 .hero-art {
-  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   position: relative;
-  display: grid;
-  place-items: center;
-  border-radius: 48% 52% 42% 58% / 50% 40% 60% 50%;
-  background: linear-gradient(145deg, #f3d7a4, #f7d6df 52%, #c7d9bd);
-  animation: floatArt 6s ease-in-out infinite;
+  width: 100%;
 }
 
-.art-skull {
-  font-size: clamp(5rem, 11vw, 9rem);
-  filter: drop-shadow(0 15px 15px #7b393633);
-}
-
-.art-flower {
-  position: absolute;
-  top: 18%;
-  left: 15%;
-  color: var(--red);
-  font-size: 3.8rem;
-}
-
-.art-flower.second {
-  top: auto;
-  left: auto;
-  right: 10%;
-  bottom: 17%;
-  color: var(--green);
-}
-
-.art-sun {
-  position: absolute;
-  top: 14%;
-  right: 17%;
-  font-size: 2.8rem;
+.hero-art img {
+  width: 100%;
+  max-width: 460px;
+  height: auto;
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+  display: block;
 }
 
 .art-caption {
-  position: absolute;
-  bottom: 12%;
-  padding: 9px 14px;
+  position: relative;
+  margin-top: 14px;
+  padding: 8px 16px;
   border-radius: 30px;
   background: white;
   color: var(--red);
-  font-size: .8rem;
+  font-size: .82rem;
   font-weight: 800;
-  box-shadow: var(--shadow);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  display: inline-block;
+  text-align: center;
 }
 
-@keyframes floatArt {
-  0%, 100% { transform: translateY(0) rotate(-1deg); }
-  50% { transform: translateY(-8px) rotate(1deg); }
-}
-
+/* Estadísticas generales */
 .stats-grid {
   grid-column: 1 / -1;
   display: grid;
@@ -282,8 +262,9 @@ textarea:focus-visible {
   font-size: .8rem;
 }
 
+/* Secciones Generales y Filtros */
 .section {
-  padding: 72px 7%;
+  padding: 60px 7%;
 }
 
 .section-heading {
@@ -327,7 +308,7 @@ textarea:focus-visible {
 
 .filters {
   display: flex;
-  align-items: end;
+  align-items: flex-end;
   flex-wrap: wrap;
   gap: 16px;
   padding: 20px;
@@ -377,6 +358,7 @@ textarea:focus-visible {
   font-size: .9rem;
 }
 
+/* Tarjetas de Tradiciones */
 .traditions-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -399,527 +381,11 @@ textarea:focus-visible {
 }
 
 .tradition-visual {
-  min-height: 150px;
-  display: grid;
-  place-items: center;
+  min-height: 180px;
+  height: 180px;
   position: relative;
+  overflow: hidden;
   background: var(--card-color, #f4e4d4);
 }
 
-.tradition-emoji {
-  font-size: 5rem;
-  filter: drop-shadow(0 6px 5px #00000012);
-}
-
-.region-tag {
-  position: absolute;
-  top: 12px;
-  left: 12px;
-  padding: 5px 10px;
-  background: #ffffffed;
-  border-radius: 20px;
-  font-size: .75rem;
-  font-weight: 800;
-}
-
-.favorite-btn {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  width: 42px;
-  height: 42px;
-  border: 0;
-  border-radius: 50%;
-  background: white;
-  font-size: 1.25rem;
-  box-shadow: 0 3px 12px #00000012;
-}
-
-.favorite-btn.is-favorite {
-  background: #ffe2e8;
-}
-
-.tradition-info {
-  padding: 19px;
-}
-
-.tradition-info h3 {
-  margin: 0 0 8px;
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 1.3rem;
-}
-
-.tradition-info p {
-  margin: 0 0 15px;
-  color: var(--muted);
-  font-size: .93rem;
-}
-
-.tradition-meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-bottom: 15px;
-}
-
-.tradition-meta span {
-  padding: 4px 8px;
-  border-radius: 7px;
-  background: #f5f1ea;
-  color: #65574d;
-  font-size: .76rem;
-}
-
-.details-btn {
-  width: 100%;
-}
-
-.empty-state {
-  padding: 22px;
-  text-align: center;
-  color: var(--muted);
-}
-
-.passport-section {
-  background: #f1f4e9;
-}
-
-.passport-card {
-  max-width: 760px;
-  margin: auto;
-  padding: clamp(20px, 4vw, 35px);
-  background: white;
-  border: 1px solid #dbe5d1;
-  border-radius: 24px;
-  box-shadow: var(--shadow);
-}
-
-.passport-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 15px;
-}
-
-.passport-stamp {
-  display: inline-block;
-  padding: 13px 15px;
-  border: 2px dashed var(--green);
-  border-radius: 12px;
-  color: var(--green);
-  font-weight: 900;
-  transform: rotate(-3deg);
-}
-
-.passport-top strong {
-  color: var(--green);
-  font-size: 2.6rem;
-}
-
-.passport-top p {
-  margin: 0;
-  color: var(--muted);
-  font-size: .85rem;
-}
-
-.progress-track {
-  height: 13px;
-  margin: 20px 0;
-  overflow: hidden;
-  border-radius: 20px;
-  background: #e7e9e1;
-}
-
-.progress-fill {
-  height: 100%;
-  width: 0;
-  background: linear-gradient(90deg, var(--green), #7ca76a);
-  border-radius: inherit;
-  transition: width .4s ease;
-}
-
-.passport-checklist {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
-}
-
-.passport-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  padding: 12px;
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  font-size: .91rem;
-}
-
-.passport-item input {
-  width: 18px;
-  min-height: 18px;
-  margin-top: 3px;
-  accent-color: var(--green);
-}
-
-.passport-message {
-  margin-top: 22px;
-  color: var(--green);
-  font-weight: 750;
-  text-align: center;
-}
-
-.visitor-layout {
-  display: grid;
-  grid-template-columns: minmax(0, .95fr) minmax(0, 1.05fr);
-  gap: 25px;
-  align-items: start;
-}
-
-.visitor-form, .wall-panel {
-  padding: clamp(18px, 3vw, 28px);
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  background: white;
-  box-shadow: var(--shadow);
-}
-
-.visitor-form h3, .wall-panel h3 {
-  margin: 0 0 22px;
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 1.5rem;
-}
-
-.visitor-form > label {
-  display: block;
-  margin: 14px 0 6px;
-  font-size: .9rem;
-  font-weight: 750;
-}
-
-.visitor-form textarea {
-  resize: vertical;
-}
-
-.visitor-form input:focus,
-.visitor-form select:focus,
-.visitor-form textarea:focus {
-  border-color: var(--green);
-}
-
-.field-message {
-  display: block;
-  min-height: 5px;
-  margin-top: 4px;
-  font-size: .78rem;
-}
-
-.valid {
-  border-color: #27844c !important;
-  background-color: #f1fff5 !important;
-}
-
-.invalid {
-  border-color: #c52e3c !important;
-  background-color: #fff4f4 !important;
-}
-
-.field-message.error {
-  color: #b42332;
-}
-
-.field-message.success {
-  color: #27844c;
-}
-
-.full-width {
-  width: 100%;
-  margin-top: 15px;
-}
-
-.form-message {
-  font-size: .9rem;
-  font-weight: 700;
-}
-
-.form-message.error {
-  color: #b42332;
-}
-
-.form-message.success {
-  color: var(--green);
-}
-
-.quote-box {
-  padding: 20px;
-  margin-bottom: 20px;
-  border-radius: 15px;
-  background: #fbf0e1;
-  text-align: center;
-}
-
-.quote-box p {
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 1.2rem;
-  font-style: italic;
-}
-
-.comments-wall {
-  display: grid;
-  gap: 12px;
-}
-
-.comment-card {
-  padding: 16px;
-  border: 1px solid var(--border);
-  border-left: 4px solid var(--red);
-  border-radius: 12px;
-  overflow-wrap: anywhere;
-}
-
-.comment-card h4 {
-  margin: 0;
-  font-size: 1rem;
-}
-
-.comment-origin {
-  margin: 2px 0 9px;
-  color: var(--muted);
-  font-size: .8rem;
-}
-
-.comment-text {
-  margin: 0 0 10px;
-  white-space: pre-wrap;
-}
-
-.comment-favorite {
-  display: inline-block;
-  padding: 4px 8px;
-  border-radius: 7px;
-  background: #f9e6e8;
-  color: var(--red);
-  font-size: .8rem;
-}
-
-.comment-date {
-  display: block;
-  margin-top: 10px;
-  color: var(--muted);
-  font-size: .75rem;
-}
-
-.site-footer {
-  display: flex;
-  justify-content: space-between;
-  gap: 15px;
-  padding: 25px 7%;
-  background: #272a24;
-  color: white;
-  font-size: .88rem;
-}
-
-.site-footer a {
-  color: #f4d8a4;
-  white-space: nowrap;
-}
-
-/* Modal dinámico */
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 100;
-  display: grid;
-  place-items: center;
-  padding: 18px;
-  overflow-y: auto;
-  background: #191612b8;
-  backdrop-filter: blur(4px);
-}
-
-.modal-panel {
-  position: relative;
-  width: min(100%, 560px);
-  max-height: 90dvh;
-  overflow-y: auto;
-  padding: 28px;
-  border-radius: 22px;
-  background: white;
-  box-shadow: 0 25px 80px #0004;
-  animation: modalIn .22s ease;
-}
-
-@keyframes modalIn {
-  from { opacity: 0; transform: translateY(15px) scale(.98); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
-}
-
-.modal-close {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  width: 42px;
-  height: 42px;
-  border: 0;
-  border-radius: 50%;
-  background: #f6eeee;
-  font-size: 1.4rem;
-}
-
-.modal-emoji {
-  display: grid;
-  place-items: center;
-  min-height: 130px;
-  margin: -5px -5px 20px;
-  border-radius: 15px;
-  font-size: 5rem;
-}
-
-.modal-panel h2 {
-  padding-right: 30px;
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 2rem;
-  line-height: 1.2;
-}
-
-.modal-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 20px;
-}
-
-body.modal-open {
-  overflow: hidden;
-}
-
-[hidden] {
-  display: none !important;
-}
-
-@media (max-width: 900px) {
-  .hero {
-    padding: 55px 5% 35px;
-    gap: 20px;
-  }
-
-  .section {
-    padding: 55px 5%;
-  }
-
-  .traditions-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .visitor-layout {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 600px) {
-  .site-header {
-    padding: 12px 5%;
-  }
-
-  .menu-toggle {
-    display: block;
-  }
-
-  .main-nav {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    display: none;
-    padding: 18px 5%;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 15px;
-    background: var(--cream);
-    border-bottom: 1px solid var(--border);
-  }
-
-  .main-nav.open {
-    display: flex;
-  }
-
-  .hero {
-    grid-template-columns: 1fr;
-    padding: 42px 5% 30px;
-  }
-
-  .hero h1 {
-    font-size: 2.8rem;
-  }
-
-  .hero-art {
-    min-height: 220px;
-  }
-
-  .art-skull {
-    font-size: 6rem;
-  }
-
-  .stats-grid {
-    grid-template-columns: 1fr;
-    gap: 10px;
-  }
-
-  .stat-card {
-    padding: 12px 16px;
-  }
-
-  .section {
-    padding: 45px 5%;
-  }
-
-  .traditions-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .tradition-visual {
-    min-height: 180px;
-  }
-
-  .filters {
-    padding: 15px;
-  }
-
-  .filters label {
-    min-width: 100%;
-  }
-
-  .passport-checklist {
-    grid-template-columns: 1fr;
-  }
-
-  .passport-top {
-    align-items: flex-start;
-  }
-
-  .passport-stamp {
-    font-size: .8rem;
-  }
-
-  .passport-top strong {
-    font-size: 2rem;
-  }
-
-  .site-footer {
-    flex-direction: column;
-    text-align: center;
-    align-items: center;
-  }
-
-  .modal-panel {
-    padding: 22px;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    scroll-behavior: auto !important;
-    animation-duration: .01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: .01ms !important;
-  }
-}
+.tradition-visual img
