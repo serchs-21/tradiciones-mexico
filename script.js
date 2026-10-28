@@ -1,4 +1,3 @@
-
 "use strict";
 
 /* =========================================
@@ -6,7 +5,7 @@
    JavaScript de los tres equipos integrados
    ========================================= */
 
-/* ---------- 1. DATOS CULTURALES ---------- */
+/* ---------- 1. DATOS CULTURALES CON IMÁGENES REALES ---------- */
 
 const tradiciones = [
   {
@@ -16,6 +15,7 @@ const tradiciones = [
     tipo: "Festividades",
     emoji: "💀",
     color: "#f5d5a0",
+    imagen: "dia-muertos.jpg",
     lugar: "Celebración en distintas regiones de México",
     descripcion: "Una celebración para recordar y honrar a los seres queridos.",
     historia: "Las familias preparan altares con fotografías, flores de cempasúchil, velas, alimentos y objetos significativos. La tradición reúne prácticas indígenas y elementos religiosos que han evolucionado a lo largo del tiempo. Su expresión cambia de una comunidad a otra y es reconocida internacionalmente por su valor cultural.",
@@ -28,6 +28,7 @@ const tradiciones = [
     tipo: "Danza",
     emoji: "💃",
     color: "#f5c4d6",
+    imagen: "guelaguetza.jpg",
     lugar: "Oaxaca",
     descripcion: "Una gran fiesta de música, bailes y convivencia comunitaria.",
     historia: "La Guelaguetza reúne delegaciones de distintas regiones de Oaxaca que comparten sus danzas, música, indumentaria y expresiones culturales. El término se relaciona con la reciprocidad y el acto de compartir. Es una muestra de la diversidad de los pueblos oaxaqueños.",
@@ -40,6 +41,7 @@ const tradiciones = [
     tipo: "Danza",
     emoji: "🪶",
     color: "#d4e8bd",
+    imagen: "papantla.jpg",
     lugar: "Papantla, Veracruz",
     descripcion: "Un ritual ceremonial que une música, movimiento y simbolismo.",
     historia: "Esta ceremonia tradicional está vinculada con los pueblos totonacos. Los participantes realizan una secuencia ritual alrededor de un poste alto mientras la música y el movimiento tienen significados ceremoniales. Es una expresión cultural transmitida entre generaciones.",
@@ -52,18 +54,20 @@ const tradiciones = [
     tipo: "Música",
     emoji: "🎺",
     color: "#c7d9ef",
+    imagen: "mariachi.jpg",
     lugar: "Jalisco y otras regiones de México",
     descripcion: "Música emblemática que acompaña fiestas, serenatas y celebraciones.",
     historia: "El mariachi es una expresión musical mexicana asociada especialmente con Jalisco. Sus agrupaciones pueden utilizar violines, trompetas, guitarras, vihuela y guitarrón. Su repertorio incluye sones, rancheras y otros géneros populares.",
     dato: "El mariachi tradicional fue reconocido por la UNESCO como Patrimonio Cultural Inmaterial en 2011."
   },
   {
-    id: "rab anos".replace(" ", ""),
+    id: "nochederabanos",
     nombre: "Noche de Rábanos",
     region: "Sur",
     tipo: "Artesanía",
     emoji: "🌺",
     color: "#f6d6c4",
+    imagen: "nochederabanos.jpg",
     lugar: "Oaxaca de Juárez, Oaxaca",
     descripcion: "Una celebración donde los rábanos se transforman en figuras artísticas.",
     historia: "Artesanos elaboran figuras y escenas utilizando rábanos y otros materiales vegetales. Esta tradición se celebra en diciembre en la ciudad de Oaxaca y combina creatividad, identidad local y celebración popular.",
@@ -76,6 +80,7 @@ const tradiciones = [
     tipo: "Festividades",
     emoji: "🎭",
     color: "#d9d0f3",
+    imagen: "mazatlan.jpg",
     lugar: "Mazatlán, Sinaloa",
     descripcion: "Desfiles, música, comparsas y celebraciones junto al Pacífico.",
     historia: "El Carnaval de Mazatlán es una festividad con desfiles, presentaciones musicales, carros alegóricos y actividades culturales. Forma parte de la identidad de la ciudad y reúne a residentes y visitantes durante varios días.",
@@ -88,6 +93,7 @@ const tradiciones = [
     tipo: "Gastronomía",
     emoji: "🌮",
     color: "#f4dfab",
+    imagen: "tradicional.jpg",
     lugar: "Todo México",
     descripcion: "Sabores, técnicas e ingredientes transmitidos entre generaciones.",
     historia: "La cocina tradicional mexicana comprende conocimientos agrícolas, técnicas culinarias, ingredientes regionales y prácticas comunitarias. El maíz, el frijol y el chile son fundamentales en muchas de sus expresiones. Cada región aporta recetas, ingredientes y formas de preparación particulares.",
@@ -100,6 +106,7 @@ const tradiciones = [
     tipo: "Festividades",
     emoji: "🎡",
     color: "#f5d1d3",
+    imagen: "san-marcos.jpg",
     lugar: "Aguascalientes, Aguascalientes",
     descripcion: "Una feria con música, exposiciones, gastronomía y cultura popular.",
     historia: "La Feria Nacional de San Marcos es una celebración de gran importancia para Aguascalientes. Integra actividades culturales, exposiciones, espectáculos, gastronomía y convivencia, y atrae a visitantes de diferentes lugares.",
@@ -256,11 +263,17 @@ function renderizarGaleria() {
     const visual = document.createElement("div");
     visual.className = "tradition-visual";
     visual.style.setProperty("--card-color", tradicion.color);
+    visual.style.position = "relative";
+    visual.style.overflow = "hidden";
 
-    const emoji = document.createElement("span");
-    emoji.className = "tradition-emoji";
-    emoji.textContent = tradicion.emoji;
-    emoji.setAttribute("aria-hidden", "true");
+    // Muestra la imagen real subida a GitHub
+    const img = document.createElement("img");
+    img.src = tradicion.imagen;
+    img.alt = tradicion.nombre;
+    img.style.width = "100%";
+    img.style.height = "170px";
+    img.style.objectFit = "cover";
+    img.style.display = "block";
 
     const etiqueta = document.createElement("span");
     etiqueta.className = "region-tag";
@@ -285,7 +298,7 @@ function renderizarGaleria() {
       alternarFavorito(tradicion.id);
     });
 
-    visual.append(emoji, etiqueta, botonFavorito);
+    visual.append(img, etiqueta, botonFavorito);
 
     const info = document.createElement("div");
     info.className = "tradition-info";
@@ -326,524 +339,4 @@ function renderizarGaleria() {
   emptyState.hidden = filtradas.length !== 0;
 }
 
-function sincronizarRegion(region) {
-  regionSeleccionada = region;
-  regionFilter.value = region;
-
-  document.querySelectorAll(".region-btn").forEach(boton => {
-    const activo = boton.dataset.region === region;
-    boton.classList.toggle("active", activo);
-    boton.setAttribute("aria-pressed", String(activo));
-  });
-
-  renderizarGaleria();
-}
-
-document.querySelectorAll(".region-btn").forEach(boton => {
-  boton.addEventListener("click", () => {
-    sincronizarRegion(boton.dataset.region);
-  });
-});
-
-regionFilter.addEventListener("change", () => {
-  sincronizarRegion(regionFilter.value);
-});
-
-typeFilter.addEventListener("change", renderizarGaleria);
-onlyFavorites.addEventListener("change", renderizarGaleria);
-
-function alternarFavorito(id) {
-  const indice = favoritos.indexOf(id);
-  let accion;
-
-  if (indice >= 0) {
-    favoritos.splice(indice, 1);
-    accion = "eliminado";
-  } else {
-    favoritos.push(id);
-    accion = "agregado";
-    reacciones++;
-  }
-
-  guardarStorage(STORAGE.favoritos, favoritos);
-  guardarStorage(STORAGE.reacciones, reacciones);
-
-  actualizarContadores();
-  renderizarGaleria();
-
-  emitirEvento("tradiciones:favorito", {
-    id,
-    accion,
-    total: favoritos.length
-  });
-}
-
-/* ---------- 7. MODAL Y AUDIO NARRADO ---------- */
-
-function abrirModal(id) {
-  const tradicion = tradiciones.find(item => item.id === id);
-  if (!tradicion) return;
-
-  cerrarModal();
-
-  const overlay = document.createElement("div");
-  overlay.className = "modal-overlay";
-  overlay.id = "traditionModal";
-  overlay.setAttribute("role", "presentation");
-
-  const panel = document.createElement("section");
-  panel.className = "modal-panel";
-  panel.setAttribute("role", "dialog");
-  panel.setAttribute("aria-modal", "true");
-  panel.setAttribute("aria-labelledby", "modalTitle");
-
-  const cerrar = document.createElement("button");
-  cerrar.className = "modal-close";
-  cerrar.type = "button";
-  cerrar.textContent = "×";
-  cerrar.setAttribute("aria-label", "Cerrar ventana");
-
-  const visual = document.createElement("div");
-  visual.className = "modal-emoji";
-  visual.style.background = tradicion.color;
-  visual.textContent = tradicion.emoji;
-
-  const titulo = document.createElement("h2");
-  titulo.id = "modalTitle";
-  titulo.textContent = tradicion.nombre;
-
-  const lugar = document.createElement("p");
-  lugar.textContent = `📍 ${tradicion.lugar} · ${tradicion.tipo}`;
-
-  const historia = document.createElement("p");
-  historia.textContent = tradicion.historia;
-
-  const dato = document.createElement("p");
-  const datoFuerte = document.createElement("strong");
-  datoFuerte.textContent = "¿Sabías que? ";
-  dato.append(datoFuerte, document.createTextNode(tradicion.dato));
-
-  const acciones = document.createElement("div");
-  acciones.className = "modal-actions";
-
-  const escuchar = document.createElement("button");
-  escuchar.type = "button";
-  escuchar.className = "btn btn-outline";
-  escuchar.textContent = "🔊 Escuchar historia";
-
-  escuchar.addEventListener("click", () => {
-    if (!("speechSynthesis" in window)) {
-      alert("Tu navegador no permite narrar el texto.");
-      return;
-    }
-
-    window.speechSynthesis.cancel();
-
-    const narracion = new SpeechSynthesisUtterance(
-      `${tradicion.nombre}. ${tradicion.historia} ¿Sabías que? ${tradicion.dato}`
-    );
-
-    narracion.lang = "es-MX";
-    narracion.rate = 0.92;
-    window.speechSynthesis.speak(narracion);
-  });
-
-  const favorito = document.createElement("button");
-  favorito.type = "button";
-  favorito.className = "btn btn-primary";
-  favorito.textContent = favoritos.includes(id)
-    ? "❤️ Quitar de favoritas"
-    : "🤍 Añadir a favoritas";
-
-  favorito.addEventListener("click", () => {
-    alternarFavorito(id);
-    favorito.textContent = favoritos.includes(id)
-      ? "❤️ Quitar de favoritas"
-      : "🤍 Añadir a favoritas";
-  });
-
-  acciones.append(escuchar, favorito);
-  panel.append(cerrar, visual, titulo, lugar, historia, dato, acciones);
-  overlay.appendChild(panel);
-  modalRoot.appendChild(overlay);
-
-  document.body.classList.add("modal-open");
-  cerrar.focus();
-
-  cerrar.addEventListener("click", cerrarModal);
-
-  overlay.addEventListener("click", evento => {
-    if (evento.target === overlay) cerrarModal();
-  });
-
-  emitirEvento("tradiciones:modal", { id });
-}
-
-function cerrarModal() {
-  const modal = document.getElementById("traditionModal");
-
-  if (modal) {
-    modal.remove();
-    document.body.classList.remove("modal-open");
-    window.speechSynthesis?.cancel();
-  }
-}
-
-document.addEventListener("keydown", evento => {
-  if (evento.key === "Escape") cerrarModal();
-});
-
-/* ---------- 8. EQUIPO 2: PASAPORTE CULTURAL ---------- */
-
-function renderizarPasaporte() {
-  const contenedor = document.getElementById("passportChecklist");
-  contenedor.replaceChildren();
-
-  tradiciones.forEach(tradicion => {
-    const etiqueta = document.createElement("label");
-    etiqueta.className = "passport-item";
-
-    const checkbox = document.createElement("input");
-    checkbox.type = "checkbox";
-    checkbox.checked = pasaporte.includes(tradicion.id);
-    checkbox.value = tradicion.id;
-
-    checkbox.addEventListener("change", () => {
-      if (checkbox.checked && !pasaporte.includes(tradicion.id)) {
-        pasaporte.push(tradicion.id);
-      } else {
-        pasaporte = pasaporte.filter(id => id !== tradicion.id);
-      }
-
-      guardarStorage(STORAGE.pasaporte, pasaporte);
-      actualizarPasaporte();
-    });
-
-    const texto = document.createElement("span");
-    texto.textContent = `${tradicion.emoji} ${tradicion.nombre}`;
-
-    etiqueta.append(checkbox, texto);
-    contenedor.appendChild(etiqueta);
-  });
-
-  actualizarPasaporte();
-}
-
-function actualizarPasaporte() {
-  const total = tradiciones.length;
-  const completadas = pasaporte.length;
-  const porcentaje = total ? Math.round(completadas / total * 100) : 0;
-
-  document.getElementById("passportPercent").textContent = `${porcentaje}%`;
-  document.getElementById("progressFill").style.width = `${porcentaje}%`;
-
-  const barra = document.getElementById("passportProgress");
-  barra.setAttribute("aria-valuenow", String(porcentaje));
-
-  const mensaje = document.getElementById("passportMessage");
-
-  if (porcentaje === 100) {
-    mensaje.textContent = "¡Felicidades! Has completado tu pasaporte cultural. 🇲🇽";
-  } else if (porcentaje >= 50) {
-    mensaje.textContent = "¡Vas muy bien! Sigue descubriendo México. ✨";
-  } else if (porcentaje > 0) {
-    mensaje.textContent = "¡Buen comienzo! Todavía hay mucho por descubrir.";
-  } else {
-    mensaje.textContent = "¡Tu aventura cultural comienza aquí!";
-  }
-
-  emitirEvento("tradiciones:pasaporte", { porcentaje, completadas, total });
-}
-
-/* ---------- 9. EQUIPO 3: VALIDACIÓN ---------- */
-
-const campos = {
-  name: document.getElementById("visitorName"),
-  origin: document.getElementById("visitorOrigin"),
-  email: document.getElementById("visitorEmail"),
-  favorite: document.getElementById("visitorFavorite"),
-  comment: document.getElementById("visitorComment")
-};
-
-const mensajesCampo = {
-  name: document.getElementById("nameMessage"),
-  origin: document.getElementById("originMessage"),
-  email: document.getElementById("emailMessage"),
-  favorite: document.getElementById("favoriteMessage"),
-  comment: document.getElementById("commentMessage")
-};
-
-function validarCampo(clave) {
-  const campo = campos[clave];
-  const valor = campo.value.trim();
-  let mensaje = "";
-
-  if (!valor) {
-    mensaje = "Este campo es obligatorio.";
-  } else if (clave === "name" && valor.length < 2) {
-    mensaje = "Escribe al menos 2 caracteres.";
-  } else if (clave === "email") {
-    const correoValido = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(valor);
-
-    if (!correoValido) mensaje = "Escribe un correo válido.";
-  } else if (clave === "comment" && valor.length < 5) {
-    mensaje = "Tu recuerdo debe tener al menos 5 caracteres.";
-  }
-
-  campo.classList.toggle("invalid", Boolean(mensaje));
-  campo.classList.toggle("valid", !mensaje);
-  campo.setAttribute("aria-invalid", String(Boolean(mensaje)));
-
-  mensajesCampo[clave].textContent = mensaje;
-  mensajesCampo[clave].className =
-    "field-message " + (mensaje ? "error" : "success");
-
-  return !mensaje;
-}
-
-Object.keys(campos).forEach(clave => {
-  campos[clave].addEventListener("input", () => {
-    validarCampo(clave);
-  });
-
-  campos[clave].addEventListener("blur", () => {
-    validarCampo(clave);
-  });
-});
-
-/* Llenar el selector con las tradiciones reales */
-function llenarSelectorFavoritas() {
-  const selector = campos.favorite;
-
-  tradiciones.forEach(tradicion => {
-    const opcion = document.createElement("option");
-    opcion.value = tradicion.id;
-    opcion.textContent = tradicion.nombre;
-    selector.appendChild(opcion);
-  });
-}
-
-/* ---------- 10. EQUIPO 3: MURO DE RECUERDOS ---------- */
-
-function renderizarComentarios() {
-  commentsWall.replaceChildren();
-
-  comentarios.forEach(comentario => {
-    const tarjeta = document.createElement("article");
-    tarjeta.className = "comment-card";
-
-    const nombre = document.createElement("h4");
-    nombre.textContent = `💌 ${comentario.name}`;
-
-    const origen = document.createElement("p");
-    origen.className = "comment-origin";
-    origen.textContent = comentario.origin;
-
-    const texto = document.createElement("p");
-    texto.className = "comment-text";
-    texto.textContent = comentario.comment;
-
-    const favorita = tradiciones.find(
-      item => item.id === comentario.favorite
-    );
-
-    const insignia = document.createElement("span");
-    insignia.className = "comment-favorite";
-    insignia.textContent = favorita
-      ? `❤️ ${favorita.nombre}`
-      : "❤️ Tradición mexicana";
-
-    const fecha = document.createElement("small");
-    fecha.className = "comment-date";
-
-    const fechaValida = new Date(comentario.date);
-    fecha.textContent = Number.isNaN(fechaValida.getTime())
-      ? ""
-      : fechaValida.toLocaleDateString("es-MX", {
-          year: "numeric",
-          month: "short",
-          day: "numeric"
-        });
-
-    tarjeta.append(nombre, origen, texto, insignia, fecha);
-    commentsWall.prepend(tarjeta);
-  });
-
-  wallEmpty.hidden = comentarios.length !== 0;
-  actualizarContadores();
-}
-
-visitorForm.addEventListener("submit", evento => {
-  evento.preventDefault();
-
-  const claves = Object.keys(campos);
-  const valido = claves.map(validarCampo).every(Boolean);
-
-  if (!valido) {
-    formMessage.textContent = "Revisa los campos marcados antes de continuar.";
-    formMessage.className = "form-message error";
-    const primerInvalido = claves.find(clave =>
-      campos[clave].classList.contains("invalid")
-    );
-
-    if (primerInvalido) campos[primerInvalido].focus();
-    return;
-  }
-
-  const nuevoComentario = {
-    id: (window.crypto?.randomUUID?.() || `${Date.now()}-${Math.random()}`),
-    name: campos.name.value.trim(),
-    origin: campos.origin.value.trim(),
-    favorite: campos.favorite.value,
-    comment: campos.comment.value.trim(),
-    date: new Date().toISOString()
-  };
-
-  /*
-    No se guarda ni se publica el correo electrónico.
-    El muro solo muestra nombre, origen, tradición y recuerdo.
-  */
-
-  comentarios.unshift(nuevoComentario);
-
-  // Limitar el muro para no llenar el almacenamiento del navegador.
-  comentarios = comentarios.slice(0, 100);
-
-  const guardado = guardarStorage(STORAGE.muro, comentarios);
-
-  if (!guardado) {
-    comentarios.shift();
-    formMessage.textContent =
-      "No se pudo guardar el recuerdo. Revisa el almacenamiento del navegador.";
-    formMessage.className = "form-message error";
-    return;
-  }
-
-  reacciones++;
-  guardarStorage(STORAGE.reacciones, reacciones);
-
-  renderizarComentarios();
-  actualizarContadores();
-
-  formMessage.textContent = "¡Tu recuerdo ya forma parte del muro! 🇲🇽";
-  formMessage.className = "form-message success";
-
-  visitorForm.reset();
-
-  Object.keys(campos).forEach(clave => {
-    campos[clave].classList.remove("valid", "invalid");
-    campos[clave].removeAttribute("aria-invalid");
-    mensajesCampo[clave].textContent = "";
-    mensajesCampo[clave].className = "field-message";
-  });
-
-  emitirEvento("tradiciones:comentarioPublicado", {
-    totalComentarios: comentarios.length,
-    totalReacciones: reacciones
-  });
-});
-
-/* ---------- 11. EQUIPO 3: FRASES ALEATORIAS ---------- */
-
-const frases = [
-  "Como México no hay dos.",
-  "El que nace para tamal, del cielo le caen las hojas.",
-  "Más vale paso que dure y no trote que canse.",
-  "Camarón que se duerme, se lo lleva la corriente.",
-  "Al mal tiempo, buena cara.",
-  "Barriga llena, corazón contento.",
-  "No dejes para mañana lo que puedas hacer hoy.",
-  "De poquito en poquito se llena el jarrito.",
-  "El que persevera alcanza.",
-  "Cada pueblo tiene su historia y cada tradición su corazón."
-];
-
-document.getElementById("quoteButton").addEventListener("click", () => {
-  const elemento = document.getElementById("randomQuote");
-  let nuevaFrase = Math.floor(Math.random() * frases.length);
-
-  if (frases.length > 1 && elemento.dataset.indice !== undefined) {
-    while (String(nuevaFrase) === elemento.dataset.indice) {
-      nuevaFrase = Math.floor(Math.random() * frases.length);
-    }
-  }
-
-  elemento.dataset.indice = String(nuevaFrase);
-  elemento.textContent = `“${frases[nuevaFrase]}”`;
-});
-
-/* ---------- 12. EVENTOS DE INTEGRACIÓN ---------- */
-
-// Equipo 3 publica y el contador compartido del Equipo 2 se actualiza.
-document.addEventListener("tradiciones:comentarioPublicado", evento => {
-  actualizarContadores();
-  console.log("Comentario publicado:", evento.detail);
-});
-
-// Equipo 1 modifica favoritos y se actualizan las estadísticas.
-document.addEventListener("tradiciones:favorito", evento => {
-  actualizarContadores();
-  console.log("Favorito actualizado:", evento.detail);
-});
-
-// Sincronización básica si la misma aplicación se abre en otra pestaña.
-window.addEventListener("storage", evento => {
-  if (evento.key === STORAGE.favoritos) {
-    favoritos = leerStorage(STORAGE.favoritos, []);
-    renderizarGaleria();
-  }
-
-  if (evento.key === STORAGE.muro) {
-    comentarios = leerStorage(STORAGE.muro, []);
-    renderizarComentarios();
-  }
-
-  if (evento.key === STORAGE.reacciones) {
-    reacciones = Number(leerStorage(STORAGE.reacciones, 0)) || 0;
-    actualizarContadores();
-  }
-
-  if (evento.key === STORAGE.pasaporte) {
-    pasaporte = leerStorage(STORAGE.pasaporte, []);
-    renderizarPasaporte();
-  }
-});
-
-/* ---------- 13. MENÚ PARA CELULARES ---------- */
-
-const menuToggle = document.getElementById("menuToggle");
-const mainNav = document.getElementById("mainNav");
-
-menuToggle.addEventListener("click", () => {
-  const abierto = mainNav.classList.toggle("open");
-  menuToggle.setAttribute("aria-expanded", String(abierto));
-  menuToggle.setAttribute(
-    "aria-label",
-    abierto ? "Cerrar menú" : "Abrir menú"
-  );
-  menuToggle.textContent = abierto ? "✕" : "☰";
-});
-
-mainNav.querySelectorAll("a").forEach(enlace => {
-  enlace.addEventListener("click", () => {
-    mainNav.classList.remove("open");
-    menuToggle.setAttribute("aria-expanded", "false");
-    menuToggle.setAttribute("aria-label", "Abrir menú");
-    menuToggle.textContent = "☰";
-  });
-});
-
-/* ---------- 14. INICIALIZACIÓN ---------- */
-
-function iniciarAplicacion() {
-  llenarSelectorFavoritas();
-  inicializarVisitas();
-  renderizarGaleria();
-  renderizarPasaporte();
-  renderizarComentarios();
-  actualizarContadores();
-
-  console.log("🇲🇽 Descubre las Tradiciones de México está listo.");
-}
-
-iniciarAplicacion();
+function sincronizarRegion
