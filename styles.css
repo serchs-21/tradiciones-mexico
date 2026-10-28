@@ -814,44 +814,47 @@ body.modal-open {
 }
 
 /* Pie de página (Footer) */
-.site-footer {
-  background: #272a24;
+/* Pie de página (Footer) */
+footer, .site-footer {
+  background: #272a24; /* Aquí está el color oscuro que tenía */
   color: white;
   padding: 40px 6%;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px; /* Separación uniforme entre los textos */
 }
 
-.site-footer p {
-  margin: 10px 0;
+footer p, .site-footer p {
+  margin: 0;
   opacity: 0.9;
 }
 
-.site-footer a {
+footer a, .site-footer a {
   color: var(--gold);
   font-weight: bold;
-  margin-top: 20px;
-  display: inline-block;
+  text-decoration: none;
+  margin-top: 10px;
 }
 
-.site-footer a:hover {
+footer a:hover, .site-footer a:hover {
   text-decoration: underline;
 }
 
+/* Alineación específica para el contador de visitas */
 .footer-counter {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 12px;
-  margin: 25px 0;
-  padding: 12px 24px;
+  margin: 15px 0;
+  padding: 10px 20px;
   background: rgba(255, 255, 255, 0.1);
   border-radius: 30px;
   font-size: 0.95rem;
   font-weight: 600;
-}
-
-.footer-counter img {
-  vertical-align: middle;
 }
 
 /* Diseño Responsivo (Móviles y Tablets) */
