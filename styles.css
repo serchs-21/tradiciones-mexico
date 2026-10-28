@@ -740,7 +740,7 @@ body.modal-open {
 }
 
 .quote-box {
-  background: var(--green);
+  background: var(--transparent);
   color: black;
   padding: 25px;
   border-radius: 18px;
