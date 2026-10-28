@@ -754,14 +754,20 @@ body.modal-open {
   font-size: 1.15rem;
 }
 
+/* === AQUÍ ESTÁ LA MAGIA DEL BOTÓN === */
 .quote-box button {
-  border-color: rgba(255, 255, 255, 0.4);
-  color: white;
+  background: #50865a; /* Un verde más claro para que el botón se distinga del fondo */
+  color: white; /* Letra blanca para que se vea perfectamente la frase */
+  border: 1px solid rgba(255, 255, 255, 0.6);
 }
 
-.quote-box button:hover {
-  background: rgba(255, 255, 255, 0.15);
+.quote-box button:hover, 
+.quote-box button:active {
+  background: var(--green); /* Se pone verde fuerte al pasar el cursor o dar clic */
+  color: white;
+  border-color: white;
 }
+/* ==================================== */
 
 .comments-wall {
   display: flex;
