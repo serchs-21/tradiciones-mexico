@@ -61,7 +61,7 @@ const tradiciones = [
     dato: "El mariachi tradicional fue reconocido por la UNESCO como Patrimonio Cultural Inmaterial en 2011."
   },
   {
-    id: "nochederabanos",
+    id: "rabanos",
     nombre: "Noche de Rábanos",
     region: "Sur",
     tipo: "Artesanía",
@@ -202,10 +202,13 @@ function inicializarVisitas() {
   const mensaje = document.getElementById("welcomeMessage");
   const sufijo = visitas === 1 ? "vez" : "veces";
 
-  mensaje.textContent =
-    `¡Bienvenido! Has visitado nuestras tradiciones ${visitas} ${sufijo}.`;
+  if (mensaje) {
+    mensaje.textContent = `¡Bienvenido! Has visitado nuestras tradiciones ${visitas} ${sufijo}.`;
+  }
 
-  animarContador(visitCounter, visitas);
+  if (visitCounter) {
+    animarContador(visitCounter, visitas);
+  }
 }
 
 function animarContador(elemento, valorFinal) {
@@ -231,15 +234,17 @@ function animarContador(elemento, valorFinal) {
 }
 
 function actualizarContadores() {
-  reactionCounter.textContent = reacciones.toLocaleString("es-MX");
-  commentCounter.textContent = comentarios.length.toLocaleString("es-MX");
+  if (reactionCounter) reactionCounter.textContent = reacciones.toLocaleString("es-MX");
+  if (commentCounter) commentCounter.textContent = comentarios.length.toLocaleString("es-MX");
 }
 
 /* ---------- 6. EQUIPO 1: GALERÍA Y FILTROS ---------- */
 
 function renderizarGaleria() {
-  const region = regionFilter.value;
-  const tipo = typeFilter.value;
+  if (!grid) return;
+
+  const region = regionFilter ? regionFilter.value : "Todas";
+  const tipo = typeFilter ? typeFilter.value : "Todas";
 
   const filtradas = tradiciones.filter(tradicion => {
     const coincideRegion =
@@ -249,7 +254,7 @@ function renderizarGaleria() {
       tipo === "Todas" || tradicion.tipo === tipo;
 
     const coincideFavorito =
-      !onlyFavorites.checked || favoritos.includes(tradicion.id);
+      !onlyFavorites || !onlyFavorites.checked || favoritos.includes(tradicion.id);
 
     return coincideRegion && coincideTipo && coincideFavorito;
   });
@@ -264,14 +269,15 @@ function renderizarGaleria() {
     visual.className = "tradition-visual";
     visual.style.setProperty("--card-color", tradicion.color);
     visual.style.position = "relative";
+    visual.style.height = "180px";
     visual.style.overflow = "hidden";
 
-    // Muestra la imagen real subida a GitHub
+    // Imagen real sustituyendo los íconos
     const img = document.createElement("img");
     img.src = tradicion.imagen;
     img.alt = tradicion.nombre;
     img.style.width = "100%";
-    img.style.height = "170px";
+    img.style.height = "100%";
     img.style.objectFit = "cover";
     img.style.display = "block";
 
@@ -333,10 +339,524 @@ function renderizarGaleria() {
     grid.appendChild(tarjeta);
   });
 
-  resultsMessage.textContent =
-    `${filtradas.length} ${filtradas.length === 1 ? "tradición encontrada" : "tradiciones encontradas"}.`;
+  if (resultsMessage) {
+    resultsMessage.textContent =
+      `${filtradas.length} ${filtradas.length === 1 ? "tradición encontrada" : "tradiciones encontradas"}.`;
+  }
 
-  emptyState.hidden = filtradas.length !== 0;
+  if (emptyState) {
+    emptyState.hidden = filtradas.length !== 0;
+  }
 }
 
-function sincronizarRegion
+function sincronizarRegion(region) {
+  regionSeleccionada = region;
+  if (regionFilter) regionFilter.value = region;
+
+  document.querySelectorAll(".region-btn").forEach(boton => {
+    const activo = boton.dataset.region === region;
+    boton.classList.toggle("active", activo);
+    boton.setAttribute("aria-pressed", String(activo));
+  });
+
+  renderizarGaleria();
+}
+
+document.querySelectorAll(".region-btn").forEach(boton => {
+  boton.addEventListener("click", () => {
+    sincronizarRegion(boton.dataset.region);
+  });
+});
+
+if (regionFilter) {
+  regionFilter.addEventListener("change", () => {
+    sincronizarRegion(regionFilter.value);
+  });
+}
+
+if (typeFilter) typeFilter.addEventListener("change", renderizarGaleria);
+if (onlyFavorites) onlyFavorites.addEventListener("change", renderizarGaleria);
+
+function alternarFavorito(id) {
+  const indice = favoritos.indexOf(id);
+  let accion;
+
+  if (indice >= 0) {
+    favoritos.splice(indice, 1);
+    accion = "eliminado";
+  } else {
+    favoritos.push(id);
+    accion = "agregado";
+    reacciones++;
+  }
+
+  guardarStorage(STORAGE.favoritos, favoritos);
+  guardarStorage(STORAGE.reacciones, reacciones);
+
+  actualizarContadores();
+  renderizarGaleria();
+
+  emitirEvento("tradiciones:favorito", {
+    id,
+    accion,
+    total: favoritos.length
+  });
+}
+
+/* ---------- 7. MODAL CON NARRADOR DE VOZ ---------- */
+
+function abrirModal(id) {
+  const tradicion = tradiciones.find(item => item.id === id);
+  if (!tradicion || !modalRoot) return;
+
+  cerrarModal();
+
+  const overlay = document.createElement("div");
+  overlay.className = "modal-overlay";
+  overlay.id = "traditionModal";
+  overlay.setAttribute("role", "presentation");
+
+  const panel = document.createElement("section");
+  panel.className = "modal-panel";
+  panel.setAttribute("role", "dialog");
+  panel.setAttribute("aria-modal", "true");
+  panel.setAttribute("aria-labelledby", "modalTitle");
+
+  const cerrar = document.createElement("button");
+  cerrar.className = "modal-close";
+  cerrar.type = "button";
+  cerrar.textContent = "×";
+  cerrar.setAttribute("aria-label", "Cerrar ventana");
+
+  const visual = document.createElement("img");
+  visual.src = tradicion.imagen;
+  visual.alt = tradicion.nombre;
+  visual.style.width = "100%";
+  visual.style.maxHeight = "220px";
+  visual.style.objectFit = "cover";
+  visual.style.borderRadius = "12px";
+  visual.style.marginBottom = "15px";
+
+  const titulo = document.createElement("h2");
+  titulo.id = "modalTitle";
+  titulo.textContent = tradicion.nombre;
+
+  const lugar = document.createElement("p");
+  lugar.textContent = `📍 ${tradicion.lugar} · ${tradicion.tipo}`;
+
+  const historia = document.createElement("p");
+  historia.textContent = tradicion.historia;
+
+  const dato = document.createElement("p");
+  const datoFuerte = document.createElement("strong");
+  datoFuerte.textContent = "¿Sabías que? ";
+  dato.append(datoFuerte, document.createTextNode(tradicion.dato));
+
+  const acciones = document.createElement("div");
+  acciones.className = "modal-actions";
+
+  const escuchar = document.createElement("button");
+  escuchar.type = "button";
+  escuchar.className = "btn btn-outline";
+  escuchar.textContent = "🔊 Escuchar historia";
+
+  escuchar.addEventListener("click", () => {
+    if (!("speechSynthesis" in window)) {
+      alert("Tu navegador no permite narrar el texto.");
+      return;
+    }
+
+    window.speechSynthesis.cancel();
+
+    const narracion = new SpeechSynthesisUtterance(
+      `${tradicion.nombre}. ${tradicion.historia} ¿Sabías que? ${tradicion.dato}`
+    );
+
+    narracion.lang = "es-MX";
+    narracion.rate = 0.92;
+    window.speechSynthesis.speak(narracion);
+  });
+
+  const favorito = document.createElement("button");
+  favorito.type = "button";
+  favorito.className = "btn btn-primary";
+  favorito.textContent = favoritos.includes(id)
+    ? "❤️ Quitar de favoritas"
+    : "🤍 Añadir a favoritas";
+
+  favorito.addEventListener("click", () => {
+    alternarFavorito(id);
+    favorito.textContent = favoritos.includes(id)
+      ? "❤️ Quitar de favoritas"
+      : "🤍 Añadir a favoritas";
+  });
+
+  acciones.append(escuchar, favorito);
+  panel.append(cerrar, visual, titulo, lugar, historia, dato, acciones);
+  overlay.appendChild(panel);
+  modalRoot.appendChild(overlay);
+
+  document.body.classList.add("modal-open");
+  cerrar.focus();
+
+  cerrar.addEventListener("click", cerrarModal);
+
+  overlay.addEventListener("click", evento => {
+    if (evento.target === overlay) cerrarModal();
+  });
+
+  emitirEvento("tradiciones:modal", { id });
+}
+
+function cerrarModal() {
+  const modal = document.getElementById("traditionModal");
+
+  if (modal) {
+    modal.remove();
+    document.body.classList.remove("modal-open");
+    window.speechSynthesis?.cancel();
+  }
+}
+
+document.addEventListener("keydown", evento => {
+  if (evento.key === "Escape") cerrarModal();
+});
+
+/* ---------- 8. PASAPORTE CULTURAL ---------- */
+
+function renderizarPasaporte() {
+  const contenedor = document.getElementById("passportChecklist");
+  if (!contenedor) return;
+
+  contenedor.replaceChildren();
+
+  tradiciones.forEach(tradicion => {
+    const etiqueta = document.createElement("label");
+    etiqueta.className = "passport-item";
+
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.checked = pasaporte.includes(tradicion.id);
+    checkbox.value = tradicion.id;
+
+    checkbox.addEventListener("change", () => {
+      if (checkbox.checked && !pasaporte.includes(tradicion.id)) {
+        pasaporte.push(tradicion.id);
+      } else {
+        pasaporte = pasaporte.filter(id => id !== tradicion.id);
+      }
+
+      guardarStorage(STORAGE.pasaporte, pasaporte);
+      actualizarPasaporte();
+    });
+
+    const texto = document.createElement("span");
+    texto.textContent = `${tradicion.emoji} ${tradicion.nombre}`;
+
+    etiqueta.append(checkbox, texto);
+    contenedor.appendChild(etiqueta);
+  });
+
+  actualizarPasaporte();
+}
+
+function actualizarPasaporte() {
+  const total = tradiciones.length;
+  const completadas = pasaporte.length;
+  const porcentaje = total ? Math.round(completadas / total * 100) : 0;
+
+  const percentEl = document.getElementById("passportPercent");
+  const fillEl = document.getElementById("progressFill");
+  const barra = document.getElementById("passportProgress");
+  const mensaje = document.getElementById("passportMessage");
+
+  if (percentEl) percentEl.textContent = `${porcentaje}%`;
+  if (fillEl) fillEl.style.width = `${porcentaje}%`;
+  if (barra) barra.setAttribute("aria-valuenow", String(porcentaje));
+
+  if (mensaje) {
+    if (porcentaje === 100) {
+      mensaje.textContent = "¡Felicidades! Has completado tu pasaporte cultural. 🇲🇽";
+    } else if (porcentaje >= 50) {
+      mensaje.textContent = "¡Vas muy bien! Sigue descubriendo México. ✨";
+    } else if (porcentaje > 0) {
+      mensaje.textContent = "¡Buen comienzo! Todavía hay mucho por descubrir.";
+    } else {
+      mensaje.textContent = "¡Tu aventura cultural comienza aquí!";
+    }
+  }
+
+  emitirEvento("tradiciones:pasaporte", { porcentaje, completadas, total });
+}
+
+/* ---------- 9. EQUIPO 3: VALIDACIÓN Y LIBRO DE VISITAS ---------- */
+
+const campos = {
+  name: document.getElementById("visitorName"),
+  origin: document.getElementById("visitorOrigin"),
+  email: document.getElementById("visitorEmail"),
+  favorite: document.getElementById("visitorFavorite"),
+  comment: document.getElementById("visitorComment")
+};
+
+const mensajesCampo = {
+  name: document.getElementById("nameMessage"),
+  origin: document.getElementById("originMessage"),
+  email: document.getElementById("emailMessage"),
+  favorite: document.getElementById("favoriteMessage"),
+  comment: document.getElementById("commentMessage")
+};
+
+function validarCampo(clave) {
+  const campo = campos[clave];
+  if (!campo) return true;
+
+  const valor = campo.value.trim();
+  let mensaje = "";
+
+  if (!valor) {
+    mensaje = "Este campo es obligatorio.";
+  } else if (clave === "name" && valor.length < 2) {
+    mensaje = "Escribe al menos 2 caracteres.";
+  } else if (clave === "email") {
+    const correoValido = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(valor);
+    if (!correoValido) mensaje = "Escribe un correo válido.";
+  } else if (clave === "comment" && valor.length < 5) {
+    mensaje = "Tu recuerdo debe tener al menos 5 caracteres.";
+  }
+
+  campo.classList.toggle("invalid", Boolean(mensaje));
+  campo.classList.toggle("valid", !mensaje);
+  campo.setAttribute("aria-invalid", String(Boolean(mensaje)));
+
+  if (mensajesCampo[clave]) {
+    mensajesCampo[clave].textContent = mensaje;
+    mensajesCampo[clave].className =
+      "field-message " + (mensaje ? "error" : "success");
+  }
+
+  return !mensaje;
+}
+
+Object.keys(campos).forEach(clave => {
+  if (campos[clave]) {
+    campos[clave].addEventListener("input", () => validarCampo(clave));
+    campos[clave].addEventListener("blur", () => validarCampo(clave));
+  }
+});
+
+function llenarSelectorFavoritas() {
+  const selector = campos.favorite;
+  if (!selector) return;
+
+  tradiciones.forEach(tradicion => {
+    const opcion = document.createElement("option");
+    opcion.value = tradicion.id;
+    opcion.textContent = tradicion.nombre;
+    selector.appendChild(opcion);
+  });
+}
+
+function renderizarComentarios() {
+  if (!commentsWall) return;
+
+  commentsWall.replaceChildren();
+
+  comentarios.forEach(comentario => {
+    const tarjeta = document.createElement("article");
+    tarjeta.className = "comment-card";
+
+    const nombre = document.createElement("h4");
+    nombre.textContent = `💌 ${comentario.name}`;
+
+    const origen = document.createElement("p");
+    origen.className = "comment-origin";
+    origen.textContent = comentario.origin;
+
+    const texto = document.createElement("p");
+    texto.className = "comment-text";
+    texto.textContent = comentario.comment;
+
+    const favorita = tradiciones.find(
+      item => item.id === comentario.favorite
+    );
+
+    const insignia = document.createElement("span");
+    insignia.className = "comment-favorite";
+    insignia.textContent = favorita
+      ? `❤️ ${favorita.nombre}`
+      : "❤️ Tradición mexicana";
+
+    const fecha = document.createElement("small");
+    fecha.className = "comment-date";
+
+    const fechaValida = new Date(comentario.date);
+    fecha.textContent = Number.isNaN(fechaValida.getTime())
+      ? ""
+      : fechaValida.toLocaleDateString("es-MX", {
+          year: "numeric",
+          month: "short",
+          day: "numeric"
+        });
+
+    tarjeta.append(nombre, origen, texto, insignia, fecha);
+    commentsWall.prepend(tarjeta);
+  });
+
+  if (wallEmpty) wallEmpty.hidden = comentarios.length !== 0;
+  actualizarContadores();
+}
+
+if (visitorForm) {
+  visitorForm.addEventListener("submit", evento => {
+    evento.preventDefault();
+
+    const claves = Object.keys(campos);
+    const valido = claves.map(validarCampo).every(Boolean);
+
+    if (!valido) {
+      if (formMessage) {
+        formMessage.textContent = "Revisa los campos marcados antes de continuar.";
+        formMessage.className = "form-message error";
+      }
+      const primerInvalido = claves.find(clave =>
+        campos[clave] && campos[clave].classList.contains("invalid")
+      );
+
+      if (primerInvalido && campos[primerInvalido]) campos[primerInvalido].focus();
+      return;
+    }
+
+    const nuevoComentario = {
+      id: (window.crypto?.randomUUID?.() || `${Date.now()}-${Math.random()}`),
+      name: campos.name.value.trim(),
+      origin: campos.origin.value.trim(),
+      favorite: campos.favorite.value,
+      comment: campos.comment.value.trim(),
+      date: new Date().toISOString()
+    };
+
+    comentarios.unshift(nuevoComentario);
+    comentarios = comentarios.slice(0, 100);
+
+    const guardado = guardarStorage(STORAGE.muro, comentarios);
+
+    if (!guardado) {
+      comentarios.shift();
+      if (formMessage) {
+        formMessage.textContent =
+          "No se pudo guardar el recuerdo. Revisa el almacenamiento del navegador.";
+        formMessage.className = "form-message error";
+      }
+      return;
+    }
+
+    reacciones++;
+    guardarStorage(STORAGE.reacciones, reacciones);
+
+    renderizarComentarios();
+    actualizarContadores();
+
+    if (formMessage) {
+      formMessage.textContent = "¡Tu recuerdo ya forma parte del muro! 🇲🇽";
+      formMessage.className = "form-message success";
+    }
+
+    visitorForm.reset();
+
+    Object.keys(campos).forEach(clave => {
+      if (campos[clave]) {
+        campos[clave].classList.remove("valid", "invalid");
+        campos[clave].removeAttribute("aria-invalid");
+      }
+      if (mensajesCampo[clave]) {
+        mensajesCampo[clave].textContent = "";
+        mensajesCampo[clave].className = "field-message";
+      }
+    });
+
+    emitirEvento("tradiciones:comentarioPublicado", {
+      totalComentarios: comentarios.length,
+      totalReacciones: reacciones
+    });
+  });
+}
+
+/* ---------- 10. FRASES ALEATORIAS ---------- */
+
+const frases = [
+  "Como México no hay dos.",
+  "El que nace para tamal, del cielo le caen las hojas.",
+  "Más vale paso que dure y no trote que canse.",
+  "Camarón que se duerme, se lo lleva la corriente.",
+  "Al mal tiempo, buena cara.",
+  "Barriga llena, corazón contento.",
+  "No dejes para mañana lo que puedas hacer hoy.",
+  "De poquito en poquito se llena el jarrito.",
+  "El que persevera alcanza.",
+  "Cada pueblo tiene su historia y cada tradición su corazón."
+];
+
+const quoteBtn = document.getElementById("quoteButton");
+if (quoteBtn) {
+  quoteBtn.addEventListener("click", () => {
+    const elemento = document.getElementById("randomQuote");
+    if (!elemento) return;
+    let nuevaFrase = Math.floor(Math.random() * frases.length);
+
+    if (frases.length > 1 && elemento.dataset.indice !== undefined) {
+      while (String(nuevaFrase) === elemento.dataset.indice) {
+        nuevaFrase = Math.floor(Math.random() * frases.length);
+      }
+    }
+
+    elemento.dataset.indice = String(nuevaFrase);
+    elemento.textContent = `“${frases[nuevaFrase]}”`;
+  });
+}
+
+/* ---------- 11. EVENTOS Y MENÚ ---------- */
+
+document.addEventListener("tradiciones:comentarioPublicado", () => {
+  actualizarContadores();
+});
+
+document.addEventListener("tradiciones:favorito", () => {
+  actualizarContadores();
+});
+
+const menuToggle = document.getElementById("menuToggle");
+const mainNav = document.getElementById("mainNav");
+
+if (menuToggle && mainNav) {
+  menuToggle.addEventListener("click", () => {
+    const abierto = mainNav.classList.toggle("open");
+    menuToggle.setAttribute("aria-expanded", String(abierto));
+    menuToggle.setAttribute("aria-label", abierto ? "Cerrar menú" : "Abrir menú");
+    menuToggle.textContent = abierto ? "✕" : "☰";
+  });
+
+  mainNav.querySelectorAll("a").forEach(enlace => {
+    enlace.addEventListener("click", () => {
+      mainNav.classList.remove("open");
+      menuToggle.setAttribute("aria-expanded", "false");
+      menuToggle.setAttribute("aria-label", "Abrir menú");
+      menuToggle.textContent = "☰";
+    });
+  });
+}
+
+/* ---------- 12. INICIALIZACIÓN ---------- */
+
+function iniciarAplicacion() {
+  llenarSelectorFavoritas();
+  inicializarVisitas();
+  renderizarGaleria();
+  renderizarPasaporte();
+  renderizarComentarios();
+  actualizarContadores();
+
+  console.log("🇲🇽 Descubre las Tradiciones de México listo.");
+}
+
+iniciarAplicacion();
